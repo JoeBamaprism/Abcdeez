@@ -44,7 +44,7 @@ jobs:
               <key>provisioningProfiles</key>
               <dict>
                 <key>com.mfsaglam.Controller-Deadzone</key> <!-- Replace with your app's bundle identifier -->
-                <string>XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</string> <!-- Replace with your provisioning profile ID -->
+                <string>XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</string> <!-- Replace with your provisioning profile's UUID -->
               </dict>
           </dict>
           </plist>
