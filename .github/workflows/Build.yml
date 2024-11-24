@@ -58,6 +58,7 @@ jobs:
             -archivePath build/ControllerDeadzone.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM="" \
             archive
 
           # Export the IPA
