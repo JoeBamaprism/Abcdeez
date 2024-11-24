@@ -21,7 +21,7 @@ jobs:
         with:
           xcode-version: latest
 
-      # Create exportOptions.plist
+      # Create exportOptions.plist dynamically
       - name: Create exportOptions.plist
         run: |
           cat <<EOF > exportOptions.plist
@@ -44,7 +44,7 @@ jobs:
               <key>provisioningProfiles</key>
               <dict>
                 <key>com.mfsaglam.Controller-Deadzone</key> <!-- Replace with your app's bundle identifier -->
-                <string>XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</string> <!-- Replace with your provisioning profile's UUID -->
+                <string>XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</string> <!-- Replace with your provisioning profile UUID -->
               </dict>
           </dict>
           </plist>
