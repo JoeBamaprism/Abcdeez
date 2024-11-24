@@ -40,7 +40,7 @@ jobs:
               <key>stripSwiftSymbols</key>
               <true/>
               <key>teamID</key>
-              <string>XXXXXXXXXX</string> <!-- Placeholder Team ID -->
+              <string>XXXXXXXXXX</string> <!-- Replace with your actual Team ID -->
           </dict>
           </plist>
           EOF
@@ -60,7 +60,7 @@ jobs:
             -archivePath build/ControllerDeadzone.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_IDENTITY="" \
-            DEVELOPMENT_TEAM="XXXXXXXXXX" \ # Placeholder Team ID
+            DEVELOPMENT_TEAM="XXXXXXXXXX" \  # Replace with actual Team ID if necessary
             PROVISIONING_PROFILE_SPECIFIER="" \
             clean archive
 
@@ -72,7 +72,7 @@ jobs:
             -exportOptionsPlist exportOptions.plist \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_IDENTITY="" \
-            DEVELOPMENT_TEAM="XXXXXXXXXX" \ # Placeholder Team ID
+            DEVELOPMENT_TEAM="XXXXXXXXXX" \  # Replace with actual Team ID if necessary
             PROVISIONING_PROFILE_SPECIFIER="" \
             -allowProvisioningUpdates
 
