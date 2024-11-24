@@ -25,13 +25,22 @@ jobs:
       - name: Create exportOptions.plist
         run: |
           cat <<EOF > exportOptions.plist
-          {
-            "method": "ad-hoc",
-            "signingStyle": "manual",
-            "compileBitcode": false,
-            "thinning": "<none>",
-            "stripSwiftSymbols": true
-          }
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>ad-hoc</string>
+              <key>signingStyle</key>
+              <string>manual</string>
+              <key>compileBitcode</key>
+              <false/>
+              <key>thinning</key>
+              <string>&lt;none&gt;</string>
+              <key>stripSwiftSymbols</key>
+              <true/>
+          </dict>
+          </plist>
           EOF
 
       # Build the unsigned IPA
