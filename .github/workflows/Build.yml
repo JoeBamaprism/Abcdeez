@@ -21,11 +21,6 @@ jobs:
         with:
           xcode-version: latest
 
-      # Install dependencies (if needed, e.g., CocoaPods)
-      - name: Install CocoaPods (if applicable)
-        run: pod install
-        working-directory: controller-deadzone-main
-
       # Build the unsigned IPA
       - name: Build Unsigned IPA
         run: |
