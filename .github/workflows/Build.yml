@@ -21,6 +21,19 @@ jobs:
         with:
           xcode-version: latest
 
+      # Create exportOptions.plist
+      - name: Create exportOptions.plist
+        run: |
+          cat <<EOF > exportOptions.plist
+          {
+            "method": "ad-hoc",
+            "signingStyle": "manual",
+            "compileBitcode": false,
+            "thinning": "<none>",
+            "stripSwiftSymbols": true
+          }
+          EOF
+
       # Build the unsigned IPA
       - name: Build Unsigned IPA
         run: |
@@ -43,17 +56,7 @@ jobs:
             -exportArchive \
             -archivePath build/ControllerDeadzone.xcarchive \
             -exportPath build/unsigned-ipa \
-            -exportOptionsPlist <(
-              cat <<EOF
-              {
-                "method": "ad-hoc",
-                "signingStyle": "manual",
-                "compileBitcode": false,
-                "thinning": "<none>",
-                "stripSwiftSymbols": true
-              }
-              EOF
-            )
+            -exportOptionsPlist exportOptions.plist
 
       # Upload the IPA as an artifact
       - name: Upload Unsigned IPA
