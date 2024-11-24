@@ -8,27 +8,29 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      # Checkout the repository with full history and submodules
+      # Checkout the repository with submodules and full history
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          submodules: true
-          fetch-depth: 0
+          submodules: true  # Checkout submodules if your project uses them
+          fetch-depth: 0  # Ensure all history is fetched, not just the latest commit
 
       # Debug repository contents to ensure all files are present
       - name: Debug Repository Contents
         run: |
-          ls -R  # List all files in the repo to verify the structure
+          ls -R  # List all files in the repo to verify the file structure is as expected
 
-      # Install CocoaPods (if applicable)
-      - name: Install CocoaPods
+      # Install CocoaPods if required
+      - name: Install CocoaPods (if applicable)
         run: |
-          pod install --repo-update || echo "No CocoaPods dependencies"  # Install dependencies if any
+          if [ -f "Podfile" ]; then
+            pod install --repo-update || echo "No CocoaPods dependencies"
+          fi
 
       # Clean Derived Data to avoid stale builds
       - name: Clean Derived Data
         run: |
-          rm -rf ~/Library/Developer/Xcode/DerivedData  # Ensure a clean build by removing old derived data
+          rm -rf ~/Library/Developer/Xcode/DerivedData  # Clean Derived Data to avoid issues with old builds
 
       # Clean the project build
       - name: Clean Build
@@ -46,26 +48,26 @@ jobs:
             -configuration Release \
             -archivePath $PWD/build/ControllerDeadzone.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
-            DEVELOPMENT_TEAM="" archive  # Archive the project with no code signing
+            DEVELOPMENT_TEAM="" archive  # Archive with no code signing (unsigned)
 
-      # Debug the contents of the archive to ensure it was created successfully
+      # Debug the contents of the archive to ensure it's correct
       - name: Debug Archive Contents
         run: |
-          ls -R $PWD/build/ControllerDeadzone.xcarchive  # List the contents of the archive to ensure it's correct
+          ls -R $PWD/build/ControllerDeadzone.xcarchive  # Verify the archive content
 
-      # Prepare the IPA for export
+      # Prepare the IPA from the archive
       - name: Export .ipa
         run: |
-          rm -rf Payload/
+          rm -rf Payload/  # Clean up any old Payload
           mkdir -p Payload
           cp -R "$PWD/build/ControllerDeadzone.xcarchive/Products/Applications/Controller Deadzone.app" Payload/
-          ls -R Payload/  # Debug the Payload folder structure
-          zip -r ControllerDeadzone.ipa Payload  # Create the IPA from the Payload directory
-          mv ControllerDeadzone.ipa $PWD/build/  # Move the IPA to the build folder
+          ls -R Payload/  # List Payload contents for debugging
+          zip -r ControllerDeadzone.ipa Payload  # Create IPA from Payload
+          mv ControllerDeadzone.ipa $PWD/build/  # Move IPA to the build folder
 
       # Upload the unsigned IPA as an artifact
       - name: Upload Unsigned IPA
         uses: actions/upload-artifact@v3
         with:
           name: Unsigned-iPA
-          path: build/*.ipa  # Upload the IPA to GitHub as an artifact
+          path: build/*.ipa  # Upload the IPA as an artifact
