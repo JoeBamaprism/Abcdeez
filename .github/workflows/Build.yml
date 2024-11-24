@@ -39,7 +39,8 @@ jobs:
               <string>&lt;none&gt;</string>
               <key>stripSwiftSymbols</key>
               <true/>
-              <!-- No teamID here -->
+              <key>teamID</key>
+              <string>XXXXXXXXXX</string> <!-- Placeholder Team ID -->
           </dict>
           </plist>
           EOF
@@ -59,7 +60,7 @@ jobs:
             -archivePath build/ControllerDeadzone.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_IDENTITY="" \
-            DEVELOPMENT_TEAM="" \
+            DEVELOPMENT_TEAM="XXXXXXXXXX" \ # Placeholder Team ID
             PROVISIONING_PROFILE_SPECIFIER="" \
             clean archive
 
@@ -71,7 +72,7 @@ jobs:
             -exportOptionsPlist exportOptions.plist \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_IDENTITY="" \
-            DEVELOPMENT_TEAM="" \
+            DEVELOPMENT_TEAM="XXXXXXXXXX" \ # Placeholder Team ID
             PROVISIONING_PROFILE_SPECIFIER="" \
             -allowProvisioningUpdates
 
