@@ -65,7 +65,7 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_IDENTITY="" \
             DEVELOPMENT_TEAM="XXXXXXXXXX" \
-            PROVISIONING_PROFILE_SPECIFIER="" \
+            PROVISIONING_PROFILE_SPECIFIER="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" \
             clean archive
 
           # Export the IPA with no code signing, no team required
@@ -76,7 +76,7 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_IDENTITY="" \
             DEVELOPMENT_TEAM="XXXXXXXXXX" \
-            PROVISIONING_PROFILE_SPECIFIER="" \
+            PROVISIONING_PROFILE_SPECIFIER="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" \
             -allowProvisioningUpdates
 
       # Upload the IPA as an artifact
