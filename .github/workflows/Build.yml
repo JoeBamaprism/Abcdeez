@@ -57,8 +57,7 @@ jobs:
           mkdir -p build/unsigned-ipa
 
           # Build the archive with no code signing and skip signing entirely
-          xcodebuild \
-            -project "controller-deadzone-main/Controller Deadzone.xcodeproj" \
+          xcodebuild -project "controller-deadzone-main/Controller Deadzone.xcodeproj" \
             -scheme "Controller Deadzone" \
             -sdk iphoneos \
             -configuration Release \
@@ -70,8 +69,7 @@ jobs:
             clean archive
 
           # Export the IPA with no code signing, no team required
-          xcodebuild \
-            -exportArchive \
+          xcodebuild -exportArchive \
             -archivePath build/ControllerDeadzone.xcarchive \
             -exportPath build/unsigned-ipa \
             -exportOptionsPlist exportOptions.plist \
