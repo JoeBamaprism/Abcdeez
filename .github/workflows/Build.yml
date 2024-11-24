@@ -49,7 +49,7 @@ jobs:
           # Create an output directory for the IPA
           mkdir -p build/unsigned-ipa
 
-          # Build the archive
+          # Build the archive with no code signing
           xcodebuild \
             -project "controller-deadzone-main/Controller Deadzone.xcodeproj" \
             -scheme "Controller Deadzone" \
@@ -60,14 +60,18 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             DEVELOPMENT_TEAM="" \
             PROVISIONING_PROFILE_SPECIFIER="" \
-            archive
+            clean archive
 
-          # Export the IPA
+          # Export the IPA (with no code signing)
           xcodebuild \
             -exportArchive \
             -archivePath build/ControllerDeadzone.xcarchive \
             -exportPath build/unsigned-ipa \
-            -exportOptionsPlist exportOptions.plist
+            -exportOptionsPlist exportOptions.plist \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM="" \
+            PROVISIONING_PROFILE_SPECIFIER=""
 
       # Upload the IPA as an artifact
       - name: Upload Unsigned IPA
