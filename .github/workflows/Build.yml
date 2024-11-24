@@ -1,0 +1,68 @@
+name: Build Unsigned IPA
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Set up Xcode
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v2
+        with:
+          xcode-version: latest
+
+      # Install dependencies (if needed, e.g., CocoaPods)
+      - name: Install CocoaPods (if applicable)
+        run: pod install
+        working-directory: controller-deadzone-main
+
+      # Build the unsigned IPA
+      - name: Build Unsigned IPA
+        run: |
+          # Create an output directory for the IPA
+          mkdir -p build/unsigned-ipa
+
+          # Build the archive
+          xcodebuild \
+            -project "controller-deadzone-main/Controller Deadzone.xcodeproj" \
+            -scheme "Controller Deadzone" \
+            -sdk iphoneos \
+            -configuration Release \
+            -archivePath build/ControllerDeadzone.xcarchive \
+            archive
+
+          # Export the IPA
+          xcodebuild \
+            -exportArchive \
+            -archivePath build/ControllerDeadzone.xcarchive \
+            -exportPath build/unsigned-ipa \
+            -exportOptionsPlist <(
+              cat <<EOF
+              {
+                "method": "ad-hoc",
+                "signingStyle": "manual",
+                "compileBitcode": false,
+                "thinning": "<none>",
+                "stripSwiftSymbols": true,
+                "teamID": "",
+                "signingCertificate": ""
+              }
+              EOF
+            )
+
+      # Upload the IPA as an artifact
+      - name: Upload Unsigned IPA
+        uses: actions/upload-artifact@v3
+        with:
+          name: unsigned-ipa
+          path: build/unsigned-ipa/
