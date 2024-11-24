@@ -41,6 +41,11 @@ jobs:
               <true/>
               <key>teamID</key>
               <string>XXXXXXXXXX</string> <!-- Replace with your actual Team ID -->
+              <key>provisioningProfiles</key>
+              <dict>
+                <key>com.mfsaglam.Controller-Deadzone</key> <!-- Replace with your app's bundle identifier -->
+                <string>XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</string> <!-- Replace with your provisioning profile ID -->
+              </dict>
           </dict>
           </plist>
           EOF
@@ -60,7 +65,7 @@ jobs:
             -archivePath build/ControllerDeadzone.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_IDENTITY="" \
-            DEVELOPMENT_TEAM="XXXXXXXXXX" \
+            DEVELOPMENT_TEAM="XXXXXXXXXX" \  # Replace with actual Team ID
             PROVISIONING_PROFILE_SPECIFIER="" \
             clean archive
 
@@ -72,7 +77,7 @@ jobs:
             -exportOptionsPlist exportOptions.plist \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_IDENTITY="" \
-            DEVELOPMENT_TEAM="XXXXXXXXXX" \
+            DEVELOPMENT_TEAM="XXXXXXXXXX" \  # Replace with actual Team ID
             PROVISIONING_PROFILE_SPECIFIER="" \
             -allowProvisioningUpdates
 
