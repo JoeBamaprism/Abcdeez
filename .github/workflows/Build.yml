@@ -34,7 +34,8 @@ jobs:
             -sdk iphoneos \
             -configuration Release \
             -archivePath build/ControllerDeadzone.xcarchive \
-            -allowProvisioningUpdates \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
             archive
 
           # Export the IPA
@@ -49,9 +50,7 @@ jobs:
                 "signingStyle": "manual",
                 "compileBitcode": false,
                 "thinning": "<none>",
-                "stripSwiftSymbols": true,
-                "teamID": "",
-                "signingCertificate": ""
+                "stripSwiftSymbols": true
               }
               EOF
             )
