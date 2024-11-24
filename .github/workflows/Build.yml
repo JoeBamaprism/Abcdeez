@@ -64,7 +64,7 @@ jobs:
             -archivePath build/ControllerDeadzone.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_IDENTITY="" \
-            DEVELOPMENT_TEAM="XXXXXXXXXX" \ # Replace with actual Team ID
+            DEVELOPMENT_TEAM="XXXXXXXXXX" \
             PROVISIONING_PROFILE_SPECIFIER="" \
             clean archive
 
@@ -75,7 +75,7 @@ jobs:
             -exportOptionsPlist exportOptions.plist \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_IDENTITY="" \
-            DEVELOPMENT_TEAM="XXXXXXXXXX" \ # Replace with actual Team ID
+            DEVELOPMENT_TEAM="XXXXXXXXXX" \
             PROVISIONING_PROFILE_SPECIFIER="" \
             -allowProvisioningUpdates
 
