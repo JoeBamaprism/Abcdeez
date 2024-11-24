@@ -1,87 +1,71 @@
-name: Build Unsigned IPA
+name: Build Unsigned iOS .ipa
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
+  workflow_dispatch:  # Allows for manual triggering from GitHub UI
 
 jobs:
   build:
     runs-on: macos-latest
 
     steps:
-      # Checkout the repository
-      - name: Checkout Code
+      # Checkout the repository with submodules and full history
+      - name: Checkout repository
         uses: actions/checkout@v3
-
-      # Set up Xcode
-      - name: Set up Xcode
-        uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: latest
+          submodules: true
+          fetch-depth: 0
 
-      # Create exportOptions.plist dynamically
-      - name: Create exportOptions.plist
+      # Debug repository contents
+      - name: Debug Repository Contents
         run: |
-          cat <<EOF > exportOptions.plist
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-              <key>method</key>
-              <string>release-testing</string> <!-- Updated to release-testing -->
-              <key>signingStyle</key>
-              <string>manual</string>
-              <key>compileBitcode</key>
-              <false/>
-              <key>thinning</key>
-              <string>&lt;none&gt;</string>
-              <key>stripSwiftSymbols</key>
-              <true/>
-              <key>teamID</key>
-              <string>XXXXXXXXXX</string> <!-- Replace with your actual Team ID -->
-              <key>provisioningProfiles</key>
-              <dict>
-                <key>com.mfsaglam.Controller-Deadzone</key> <!-- Replace with your app's bundle identifier -->
-                <string>XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</string> <!-- Replace with your provisioning profile UUID -->
-              </dict>
-          </dict>
-          </plist>
-          EOF
+          ls -R  # List all files to verify the repo structure
 
-      # Build the unsigned IPA
-      - name: Build Unsigned IPA
+      # Install CocoaPods (if applicable)
+      - name: Install CocoaPods
         run: |
-          # Create an output directory for the IPA
-          mkdir -p build/unsigned-ipa
+          pod install --repo-update || echo "No CocoaPods dependencies"  # This ensures pods are installed if required
 
-          # Build the archive with no code signing and skip signing entirely
+      # Clean Derived Data to avoid stale builds
+      - name: Clean Derived Data
+        run: |
+          rm -rf ~/Library/Developer/Xcode/DerivedData  # Clean the derived data folder
+
+      # Clean the build (if needed)
+      - name: Clean Build
+        run: |
+          xcodebuild clean \
+            -project "controller-deadzone-main/Controller Deadzone.xcodeproj" \
+            -scheme "Controller Deadzone"  # Clean previous builds
+
+      # Archive the project
+      - name: Archive Project
+        run: |
           xcodebuild -project "controller-deadzone-main/Controller Deadzone.xcodeproj" \
             -scheme "Controller Deadzone" \
             -sdk iphoneos \
             -configuration Release \
-            -archivePath build/ControllerDeadzone.xcarchive \
+            -archivePath $PWD/build/ControllerDeadzone.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGN_IDENTITY="" \
-            DEVELOPMENT_TEAM="XXXXXXXXXX" \
-            PROVISIONING_PROFILE_SPECIFIER="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" \
-            clean archive
+            DEVELOPMENT_TEAM="" archive  # Archive the app with no code signing
 
-          # Export the IPA with no code signing, no team required
-          xcodebuild -exportArchive \
-            -archivePath build/ControllerDeadzone.xcarchive \
-            -exportPath build/unsigned-ipa \
-            -exportOptionsPlist exportOptions.plist \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGN_IDENTITY="" \
-            DEVELOPMENT_TEAM="XXXXXXXXXX" \
-            PROVISIONING_PROFILE_SPECIFIER="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" \
-            -allowProvisioningUpdates
+      # Debug archive contents
+      - name: Debug Archive Contents
+        run: |
+          ls -R $PWD/build/ControllerDeadzone.xcarchive  # Debug the archive folder contents
+
+      # Create .ipa (export unsigned IPA)
+      - name: Export .ipa
+        run: |
+          rm -rf Payload/
+          mkdir -p Payload
+          cp -R "$PWD/build/ControllerDeadzone.xcarchive/Products/Applications/Controller Deadzone.app" Payload/
+          ls -R Payload/
+          zip -r ControllerDeadzone.ipa Payload  # Create the IPA
+          mv ControllerDeadzone.ipa $PWD/build/  # Move IPA to build folder
 
       # Upload the IPA as an artifact
-      - name: Upload Unsigned IPA
+      - name: Upload .ipa
         uses: actions/upload-artifact@v3
         with:
-          name: unsigned-ipa
-          path: build/unsigned-ipa/
+          name: Unsigned-iPA
+          path: build/*.ipa  # Upload the generated IPA to GitHub as an artifact
