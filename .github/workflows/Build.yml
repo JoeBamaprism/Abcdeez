@@ -30,7 +30,7 @@ jobs:
           <plist version="1.0">
           <dict>
               <key>method</key>
-              <string>ad-hoc</string>
+              <string>release-testing</string> <!-- Updated to release-testing -->
               <key>signingStyle</key>
               <string>manual</string>
               <key>compileBitcode</key>
